@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_social/responsive/mobile_layout.dart';
+import 'package:flutter_social/responsive/responsive_layout_screen.dart';
+import 'package:flutter_social/responsive/web_layout.dart';
 import 'package:flutter_social/utils/colors.dart';
 
 void main(List<String> args) {
@@ -13,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData.dark().copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
-      home: Scaffold(body: Text("Check"))
+      home: ResponsiveLayout(mobileLayout: MobileLayout(), webLayout: WebLayout()),
     );
   }
 }
