@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_social/responsive/mobile_layout.dart';
 import 'package:flutter_social/responsive/responsive_layout_screen.dart';
@@ -7,7 +8,18 @@ import 'package:flutter_social/utils/colors.dart';
 
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+      apiKey: "AIzaSyBc65cItFRiI_j_sdpAVZNDblEyLH-zkHQ",
+      appId: "1:431796869988:web:0be328e7a59a36dcde3871",
+      messagingSenderId: "431796869988",
+      projectId: "social-4a516",
+      storageBucket: "social-4a516.appspot.com",
+    ));
+  } else {
+    await Firebase.initializeApp();
+  }
   runApp(MyApp());
 }
 
@@ -18,8 +30,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData.dark().copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
-      home: ResponsiveLayout(mobileLayout: MobileLayout(), webLayout: WebLayout()),
+      theme: ThemeData.dark()
+          .copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
+      home: ResponsiveLayout(
+          mobileLayout: MobileLayout(), webLayout: WebLayout()),
     );
   }
 }
