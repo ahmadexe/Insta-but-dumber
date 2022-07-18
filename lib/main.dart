@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_social/Screens/login_screen.dart';
 import 'package:flutter_social/responsive/mobile_layout.dart';
 import 'package:flutter_social/responsive/responsive_layout_screen.dart';
 import 'package:flutter_social/responsive/web_layout.dart';
@@ -32,8 +33,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData.dark()
           .copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
-      home: ResponsiveLayout(
-          mobileLayout: MobileLayout(), webLayout: WebLayout()),
+    //   home: ResponsiveLayout(
+    //       mobileLayout: MobileLayout(), webLayout: WebLayout()),
+    // );
+      home: LoginScreen(),
     );
   }
 }
