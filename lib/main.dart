@@ -7,6 +7,7 @@ import 'package:flutter_social/responsive/mobile_layout.dart';
 import 'package:flutter_social/responsive/responsive_layout_screen.dart';
 import 'package:flutter_social/responsive/web_layout.dart';
 import 'package:flutter_social/utils/colors.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData.dark()
           .copyWith(scaffoldBackgroundColor: mobileBackgroundColor),

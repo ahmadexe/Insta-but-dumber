@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_social/Services/authentications.dart';
 import 'package:flutter_social/Widgets/text_field_input.dart';
 import 'package:flutter_social/utils/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -15,6 +17,18 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController bioController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
+
+  signUp({required String email,
+      required String password,
+      required String username,
+      required String bio}) async {
+    String result = await Authentications().signUp(email: email, password: password, username: username, bio: bio);
+    if (result == 'A verification email has been sent to your email address') {
+      Get.snackbar("Success", result, backgroundColor: Colors.teal[900], colorText: Colors.white, icon: const Icon(Icons.check, color: Colors.white), snackPosition: SnackPosition.TOP);
+    } else {
+      Get.snackbar("Error", result, backgroundColor: Colors.red[900], colorText: Colors.white, icon: const Icon(Icons.error, color: Colors.white), snackPosition: SnackPosition.TOP);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +51,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   radius: 64,
                   backgroundImage: NetworkImage("https://images.unsplash.com/photo-1562860149-691401a306f8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"),
                 ),
-                Positioned(child: IconButton(onPressed: (){}, icon: Icon(Icons.add_a_photo)) , bottom: -8, left: 80),
+                Positioned(bottom: -8, left: 80, child: IconButton(onPressed: () {}, icon: const Icon(Icons.add_a_photo))),
               ],
             ),
             const SizedBox(height: 20),
@@ -69,7 +83,7 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             const SizedBox(height: 20),
             InkWell(
-              onTap: () {},
+              onTap: () async {signUp(email: emailController.text.toString().trim(), password: passwordController.text.toString().trim(), username: usernameController.text.toString().trim(), bio: bioController.text.toString().trim());},
               child: Container(
                 width: double.infinity,
                 height: 50,
