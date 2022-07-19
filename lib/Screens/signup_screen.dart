@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_social/Screens/login_screen.dart';
 import 'package:flutter_social/Services/authentications.dart';
 import 'package:flutter_social/Widgets/text_field_input.dart';
 import 'package:flutter_social/utils/colors.dart';
@@ -135,7 +136,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 const Text("Already have an account? ",
                     style: TextStyle(color: Colors.white)),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {Get.to(const LoginScreen());},
                   child: const Text(
                     "Log in",
                     style: TextStyle(
