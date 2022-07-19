@@ -19,16 +19,15 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-          child: Container(
+      body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 32),
         width: double.infinity,
         child: Column(
           children: [
-            Flexible(flex: 2, child: Container()),
+            Flexible(flex: 1, child: Container()),
             SvgPicture.asset(
               'assets/ic_instagram.svg',
-              height: 64,
+              height: 54,
               color: primaryColor,
             ),
 
@@ -41,7 +40,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 Positioned(child: IconButton(onPressed: (){}, icon: Icon(Icons.add_a_photo)) , bottom: -8, left: 80),
               ],
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
             TextFieldInput(
               textEditingController: emailController,
               hintText: 'Enter your email',
@@ -83,9 +82,9 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: const Text("Sign up"),
               ),
             ),
-            const SizedBox(height: 12),
-            Flexible(flex: 2, child: Container()),
+            Flexible(flex: 1, child: Container()),
             Row(
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text("Already have an account? ",
@@ -102,12 +101,9 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ],
             ),
-            Container(
-              height: 12,
-            )
           ],
         ),
-      )),
+      ),
     );
   }
 }
