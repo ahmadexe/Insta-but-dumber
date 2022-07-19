@@ -1,9 +1,13 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_social/Services/authentications.dart';
 import 'package:flutter_social/Widgets/text_field_input.dart';
 import 'package:flutter_social/utils/colors.dart';
+import 'package:flutter_social/utils/utils.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -17,17 +21,25 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController bioController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
+  Uint8List? _image;
 
   signUp({required String email,
       required String password,
       required String username,
       required String bio}) async {
-    String result = await Authentications().signUp(email: email, password: password, username: username, bio: bio);
+    String result = await Authentications().signUp(email: email, password: password, username: username, bio: bio, file: _image!);
     if (result == 'A verification email has been sent to your email address') {
       Get.snackbar("Success", result, backgroundColor: Colors.teal[900], colorText: Colors.white, icon: const Icon(Icons.check, color: Colors.white), snackPosition: SnackPosition.TOP);
     } else {
       Get.snackbar("Error", result, backgroundColor: Colors.red[900], colorText: Colors.white, icon: const Icon(Icons.error, color: Colors.white), snackPosition: SnackPosition.TOP);
     }
+  }
+
+  void selectImage() async {
+    Uint8List img = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = img;
+    });
   }
 
   @override
@@ -47,9 +59,15 @@ class _SignupScreenState extends State<SignupScreen> {
 
             Stack(
               children: [
+                _image != null? 
+                CircleAvatar(
+                  radius: 64,
+                  backgroundImage: MemoryImage(_image!),
+                )
+                :
                 const CircleAvatar(
                   radius: 64,
-                  backgroundImage: NetworkImage("https://images.unsplash.com/photo-1562860149-691401a306f8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"),
+                  backgroundImage: NetworkImage("https://stock.adobe.com/search?k=%22default+profile+picture%22"),
                 ),
                 Positioned(bottom: -8, left: 80, child: IconButton(onPressed: () {}, icon: const Icon(Icons.add_a_photo))),
               ],
