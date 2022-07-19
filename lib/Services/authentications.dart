@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +12,8 @@ class Authentications {
       {required String email,
       required String password,
       required String username,
-      required String bio}) async {
+      required String bio,
+      required Uint8List file}) async {
     String message = "An error occured";
     User? user;
 
@@ -18,7 +21,8 @@ class Authentications {
       if (email.isNotEmpty &&
           password.isNotEmpty &&
           username.isNotEmpty &&
-          bio.isNotEmpty) {
+          bio.isNotEmpty &&
+          file != null) {
         User? user = FirebaseAuth.instance.currentUser;
         await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
