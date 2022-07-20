@@ -7,7 +7,7 @@ class ModelUser {
   final String email;
   final List followers;
   final List following;
-  final String photoUrl;
+  final String? photoUrl;
 
   ModelUser({
     required this.username,

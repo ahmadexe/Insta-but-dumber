@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_social/Models/model_user.dart';
 import 'package:flutter_social/Services/storage.dart';
 
 class Authentications {
@@ -33,15 +34,19 @@ class Authentications {
         String? photoUrl =
             await Storage().uploadImageToStorage('profilePics', file, false);
 
-        await _firestore.collection('users').doc(cred.user!.uid).set({
-          'username': username,
-          'bio': bio,
-          'uid': cred.user!.uid,
-          'email': email,
-          'followers': [],
-          'following': [],
-          'photoUrl': photoUrl,
-        });
+        ModelUser userModel = ModelUser(
+            username: username,
+            bio: bio,
+            uid: cred.user!.uid,
+            email: email,
+            followers: [],
+            following: [],
+            photoUrl: photoUrl);
+
+        await _firestore
+            .collection('users')
+            .doc(cred.user!.uid)
+            .set(userModel.toJson());
 
         return "A verification email has been sent to your email address";
       } else {
