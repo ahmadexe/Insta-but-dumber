@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_social/utils/dimentions.dart';
 
-class ResponsiveLayout extends StatelessWidget {
+class ResponsiveLayout extends StatefulWidget {
   final Widget mobileLayout;
   final Widget webLayout;
   const ResponsiveLayout(
       {super.key, required this.mobileLayout, required this.webLayout});
 
   @override
+  State<ResponsiveLayout> createState() => _ResponsiveLayoutState();
+}
+
+class _ResponsiveLayoutState extends State<ResponsiveLayout> {
+  @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       if (constraints.maxWidth > webScreenSize) {
-        return webLayout;
+        return widget.webLayout;
       } else {
-        return mobileLayout;
+        return widget.mobileLayout;
       }
     });
   }
