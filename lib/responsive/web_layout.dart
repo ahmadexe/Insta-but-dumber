@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_social/Models/model_user.dart';
+import 'package:flutter_social/Providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
-class WebLayout extends StatefulWidget {
+class WebLayout extends StatelessWidget {
   const WebLayout({super.key});
 
   @override
-  State<WebLayout> createState() => _WebLayoutState();
-}
-
-class _WebLayoutState extends State<WebLayout> {
-  @override
   Widget build(BuildContext context) {
+    ModelUser? user = Provider.of<UserProvider>(context).user;
     return Scaffold(
       body: Center(
-        child: Text('Web Layout'),
+        child: user != null? Text(user.username) : const CircularProgressIndicator(),
       ),
     );
   }

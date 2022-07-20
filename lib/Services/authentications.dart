@@ -11,7 +11,7 @@ class Authentications {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<ModelUser> getUserDetails() async {
-    User user = await _auth.currentUser!;
+    User user = _auth.currentUser!;
     DocumentSnapshot doc = await _firestore.collection('users').doc(user.uid).get();
     return ModelUser.fromJson(doc);
   }
