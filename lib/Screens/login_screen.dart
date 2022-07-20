@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_social/Screens/signup_screen.dart';
+import 'package:flutter_social/Services/authentications.dart';
 import 'package:flutter_social/Widgets/text_field_input.dart';
+import 'package:flutter_social/responsive/mobile_layout.dart';
+import 'package:flutter_social/responsive/responsive_layout_screen.dart';
+import 'package:flutter_social/responsive/web_layout.dart';
 import 'package:flutter_social/utils/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -15,6 +19,17 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  void login({required String email, required String password}) async {
+    String result = await Authentications().Login(email: email, password: password);
+    if (result == 'Success') {
+      Get.to(ResponsiveLayout(mobileLayout: MobileLayout(), webLayout: WebLayout()));
+    }
+    else {
+      Get.snackbar("Error", result, backgroundColor: Colors.red[900], colorText: Colors.white, icon: const Icon(Icons.error, color: Colors.white), snackPosition: SnackPosition.TOP);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 20),
               InkWell(
-                onTap: () {},
+                onTap: () {login(email: emailController.text.trim(), password: passwordController.text.trim());},
                 child: Container(
                   width: double.infinity,
                   height: 50,
