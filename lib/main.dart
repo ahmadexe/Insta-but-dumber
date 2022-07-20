@@ -33,29 +33,29 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData.dark()
-          .copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
-    //   home: ResponsiveLayout(
-    //       mobileLayout: MobileLayout(), webLayout: WebLayout()),
-    // );
-      home: StreamBuilder (
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (snapshot.hasData && FirebaseAuth.instance.currentUser!.emailVerified) {
-            return ResponsiveLayout(
-              mobileLayout: MobileLayout(),
-              webLayout: WebLayout(),
-            );
-          }
-          return LoginScreen();
-        },
-      )
-    );
+        title: 'Flutter Demo',
+        theme: ThemeData.dark()
+            .copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
+        //   home: ResponsiveLayout(
+        //       mobileLayout: MobileLayout(), webLayout: WebLayout()),
+        // );
+        home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (snapshot.hasData &&
+                FirebaseAuth.instance.currentUser!.emailVerified) {
+              return ResponsiveLayout(
+                mobileLayout: MobileLayout(),
+                webLayout: WebLayout(),
+              );
+            }
+            return LoginScreen();
+          },
+        ));
   }
 }
