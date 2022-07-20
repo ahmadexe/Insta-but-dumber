@@ -10,6 +10,12 @@ class Authentications {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Future<ModelUser> getUserDetails() async {
+    User user = await _auth.currentUser!;
+    DocumentSnapshot doc = await _firestore.collection('users').doc(user.uid).get();
+    return ModelUser.fromJson(doc);
+  }
+
   Future<String> signUp(
       {required String email,
       required String password,

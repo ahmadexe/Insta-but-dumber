@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ModelUser {
@@ -28,4 +29,17 @@ class ModelUser {
         'following': following,
         'photoUrl': photoUrl,
       };
+
+  static ModelUser fromJson(DocumentSnapshot doc) {
+    Map<String, dynamic> snap = (doc.data() as Map<String, dynamic>);
+    return ModelUser(
+      username: snap['username'],
+      bio: snap['bio'],
+      uid: snap['uid'],
+      email: snap['email'],
+      followers: snap['followers'],
+      following: snap['following'],
+      photoUrl: snap['photoUrl'],
+    );
+  }
 }
