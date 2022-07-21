@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_social/Widgets/post_card.dart';
 import 'package:flutter_social/utils/colors.dart';
@@ -19,7 +20,22 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [IconButton(onPressed: (){}, icon: const Icon(Icons.send))],
         backgroundColor: mobileBackgroundColor,
       ),
-      body: PostCard(),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              return PostCard(
+                snap: snapshot.data!.docs[index],
+              );
+            },
+          );
+        }
+      ),
     );
   }
 }

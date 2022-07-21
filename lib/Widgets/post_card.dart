@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_social/utils/colors.dart';
 
 class PostCard extends StatelessWidget {
-  const PostCard({super.key});
+  final snap;
+  const PostCard({super.key, required this.snap});
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +23,11 @@ class PostCard extends StatelessWidget {
                     CircleAvatar(
                       radius: 20,
                       backgroundImage: NetworkImage(
-                          'https://images.unsplash.com/photo-1658087318893-59f40d1af71f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1032&q=80'),
+                        snap['profImg'],
+                      ),
                     ),
                     const SizedBox(width: 8),
-                    Text('username',
+                    Text(snap['username'],
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
                   ],
@@ -39,11 +41,11 @@ class PostCard extends StatelessWidget {
             //! Image portion
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.35,
+            height: MediaQuery.of(context).size.height * 0.5,
             width: double.infinity,
             child: Image.network(
-              'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80',
-              fit: BoxFit.cover,
+              snap['postUrl'],
+              fit: BoxFit.fill,
             ),
           ),
           Row(
@@ -90,7 +92,7 @@ class PostCard extends StatelessWidget {
                         .textTheme
                         .subtitle2!
                         .copyWith(fontWeight: FontWeight.w800),
-                    child: Text("1,234 Likes",
+                    child: Text(snap['likes'].length.toString(),
                         style: Theme.of(context).textTheme.bodyText2)),
                 Container(
                   width: double.infinity,
@@ -99,10 +101,10 @@ class PostCard extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                            text: 'username',
+                            text: snap['username'],
                             style: TextStyle(fontWeight: FontWeight.bold)),
                         TextSpan(
-                          text: ' This is a caption',
+                          text: ' ${snap['caption']}',
                         ),
                       ],
                     ),
