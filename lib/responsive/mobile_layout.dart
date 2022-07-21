@@ -23,16 +23,36 @@ class _MobileLayoutState extends State<MobileLayout> {
     _pageController = PageController();
   }
 
-  void navigationTapped(int page) {
+  @override
+  void dispose() {
+    super.dispose();
+    _pageController.dispose();
+  }
 
+  void navigationTapped(int page) {
+    _pageController.jumpToPage(page);
+  }
+
+  onPageChanged(int page){
+    setState(() {
+      _page = page;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     ModelUser? user = Provider.of<UserProvider>(context).user;
     return Scaffold(
-      body: const Center(
-        child:  Text("this is mobile"),
+      body: PageView(
+        children: [
+          Text(" Home "),
+          Text(" Search "),
+          Text(" post "),
+          Text(" favs "),
+          Text(" profile "),
+        ],
+        controller: _pageController,
+        onPageChanged: onPageChanged,
       ),
       bottomNavigationBar: CupertinoTabBar(
         // ignore: prefer_const_literals_to_create_immutables
@@ -63,10 +83,8 @@ class _MobileLayoutState extends State<MobileLayout> {
             backgroundColor: primaryColor
           ),
         ],
-        onTap: (value) {
-          setState(() {
-            _page = value;
-          });
+        onTap: (page) {
+          navigationTapped(page);
         },
       ),
     );
