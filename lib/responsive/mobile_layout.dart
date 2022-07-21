@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_social/Models/model_user.dart';
 import 'package:flutter_social/Providers/user_provider.dart';
 import 'package:flutter_social/Screens/add_post_screen.dart';
+import 'package:flutter_social/Screens/home_screen.dart';
 import 'package:flutter_social/utils/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -45,18 +46,18 @@ class _MobileLayoutState extends State<MobileLayout> {
     ModelUser? user = Provider.of<UserProvider>(context).user;
     return Scaffold(
       body: PageView(
-        children: [
-          Text(" Home "),
+        controller: _pageController,
+        onPageChanged: onPageChanged,
+        children: const [
+          HomeScreen(),
           Text(" Search "),
           AddPost(),
           Text(" favs "),
           Text(" profile "),
         ],
-        controller: _pageController,
-        onPageChanged: onPageChanged,
       ),
       bottomNavigationBar: CupertinoTabBar(
-        // ignore: prefer_const_literals_to_create_immutables
+
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home, color: _page == 0? Colors.white : secondaryColor,),
