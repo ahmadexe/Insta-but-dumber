@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_social/Widgets/post_card.dart';
 import 'package:flutter_social/utils/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -18,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [IconButton(onPressed: (){}, icon: const Icon(Icons.send))],
         backgroundColor: mobileBackgroundColor,
       ),
+      body: PostCard(),
     );
   }
 }
