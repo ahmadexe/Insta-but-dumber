@@ -3,8 +3,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_social/Models/model_user.dart';
 import 'package:flutter_social/Providers/user_provider.dart';
+import 'package:flutter_social/Services/firestore_methods.dart';
 import 'package:flutter_social/utils/colors.dart';
 import 'package:flutter_social/utils/utils.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +18,8 @@ class AddPost extends StatefulWidget {
 }
 
 class _AddPostState extends State<AddPost> {
+  TextEditingController _descriptionController = TextEditingController();
+
   Uint8List? _file; 
   _selectImage(BuildContext context) async {
     return showDialog(
@@ -58,9 +62,53 @@ class _AddPostState extends State<AddPost> {
         });
   }
 
+  void postImage(
+    String uid,
+    String username,
+    String profImage
+  ) async {
+    try{
+      String res = await FirestoreMethods().uploadPhoto(_descriptionController.text.toString(), _file!, uid, username, profImage);
+      if (res == 'Success') {
+        Get.snackbar("Success", "Post created successfully",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.green,
+            borderRadius: 10,
+            margin: const EdgeInsets.all(10),
+            borderColor: Colors.green,
+            borderWidth: 2,
+            colorText: Colors.white,
+            icon: const Icon(Icons.done, color: Colors.white)
+            );
+      }
+      else {
+        Get.snackbar("Error", "Something went wrong",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red,
+            borderRadius: 10,
+            margin: const EdgeInsets.all(10),
+            borderColor: Colors.red,
+            borderWidth: 2,
+            colorText: Colors.white,
+            icon: const Icon(Icons.error, color: Colors.white)
+            );
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red,
+            borderRadius: 10,
+            margin: const EdgeInsets.all(10),
+            borderColor: Colors.red,
+            borderWidth: 2,
+            colorText: Colors.white,
+            icon: const Icon(Icons.error, color: Colors.white)
+            );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController _descriptionController = TextEditingController();
     ModelUser? user = Provider.of<UserProvider>(context).user;
 
     return _file == null? Center(
@@ -74,7 +122,7 @@ class _AddPostState extends State<AddPost> {
           title: Text("Add Post"),
           actions: [
             TextButton(
-                onPressed: () {},
+                onPressed: () {postImage(user!.uid, user.username, user.photoUrl!);},
                 child: const Text(
                   "Post",
                   style: TextStyle(
