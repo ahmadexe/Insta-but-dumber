@@ -19,8 +19,15 @@ class AddPost extends StatefulWidget {
 
 class _AddPostState extends State<AddPost> {
   TextEditingController _descriptionController = TextEditingController();
+  bool _isLoading = false;
+  Uint8List? _file;
 
-  Uint8List? _file; 
+  void clearImg() {
+    setState(() {
+      _file = null;
+    });
+  }
+
   _selectImage(BuildContext context) async {
     return showDialog(
         context: context,
@@ -62,13 +69,20 @@ class _AddPostState extends State<AddPost> {
         });
   }
 
-  void postImage(
-    String uid,
-    String username,
-    String profImage
-  ) async {
-    try{
-      String res = await FirestoreMethods().uploadPhoto(_descriptionController.text.toString(), _file!, uid, username, profImage);
+  void postImage(String uid, String username, String profImage) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      String res = await FirestoreMethods().uploadPhoto(
+          _descriptionController.text.toString(),
+          _file!,
+          uid,
+          username,
+          profImage);
+      setState(() {
+        _isLoading = false;
+      });
       if (res == 'Success') {
         Get.snackbar("Success", "Post created successfully",
             snackPosition: SnackPosition.TOP,
@@ -78,10 +92,8 @@ class _AddPostState extends State<AddPost> {
             borderColor: Colors.green,
             borderWidth: 2,
             colorText: Colors.white,
-            icon: const Icon(Icons.done, color: Colors.white)
-            );
-      }
-      else {
+            icon: const Icon(Icons.done, color: Colors.white));
+      } else {
         Get.snackbar("Error", "Something went wrong",
             snackPosition: SnackPosition.TOP,
             backgroundColor: Colors.red,
@@ -90,95 +102,109 @@ class _AddPostState extends State<AddPost> {
             borderColor: Colors.red,
             borderWidth: 2,
             colorText: Colors.white,
-            icon: const Icon(Icons.error, color: Colors.white)
-            );
+            icon: const Icon(Icons.error, color: Colors.white));
       }
     } catch (e) {
       Get.snackbar("Error", "Something went wrong",
-            snackPosition: SnackPosition.TOP,
-            backgroundColor: Colors.red,
-            borderRadius: 10,
-            margin: const EdgeInsets.all(10),
-            borderColor: Colors.red,
-            borderWidth: 2,
-            colorText: Colors.white,
-            icon: const Icon(Icons.error, color: Colors.white)
-            );
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          borderColor: Colors.red,
+          borderWidth: 2,
+          colorText: Colors.white,
+          icon: const Icon(Icons.error, color: Colors.white));
     }
+    clearImg();
   }
 
   @override
   Widget build(BuildContext context) {
     ModelUser? user = Provider.of<UserProvider>(context).user;
 
-    return _file == null? Center(
-      child: IconButton(onPressed: (){_selectImage(context);}, icon: Icon(Icons.upload))
-    )
-    :
-    Scaffold(
-      appBar: AppBar(
-          backgroundColor: mobileBackgroundColor,
-          leading: IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back)),
-          title: Text("Add Post"),
-          actions: [
-            TextButton(
-                onPressed: () {postImage(user!.uid, user.username, user.photoUrl!);},
-                child: const Text(
-                  "Post",
-                  style: TextStyle(
-                      color: Colors.blueAccent,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
-                ))
-          ]),
+    return _file == null
+        ? Center(
+            child: IconButton(
+                onPressed: () {
+                  _selectImage(context);
+                },
+                icon: Icon(Icons.upload)))
+        : Scaffold(
+            appBar: AppBar(
+                backgroundColor: mobileBackgroundColor,
+                leading: IconButton(
+                    onPressed: () {
+                      clearImg();
+                    },
+                    icon: Icon(Icons.arrow_back)),
+                title: Text("Add Post"),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        postImage(user!.uid, user.username, user.photoUrl!);
+                      },
+                      child: const Text(
+                        "Post",
+                        style: TextStyle(
+                            color: Colors.blueAccent,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ))
+                ]),
 
-      //? Body portion
+            //? Body portion
 
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(width: 8),
-              CircleAvatar(
-                backgroundImage: NetworkImage(user!.photoUrl!),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.5,
-                child: TextField(
-                  controller: _descriptionController,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Write a caption...",
-                    hintStyle: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 16,
+            body: Column(
+              children: [
+                _isLoading
+                    ? const LinearProgressIndicator()
+                    : Container(
+                        height: 1,
+                      ),
+                const Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(width: 8),
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(user!.photoUrl!),
                     ),
-                  ),
-                  maxLines: 8,
-                ),
-              ),
-              SizedBox(
-                  width: 45,
-                  height: 45,
-                  child: AspectRatio(
-                    aspectRatio: 487 / 451,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: MemoryImage(_file!),
-                          fit: BoxFit.fill,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: TextField(
+                        controller: _descriptionController,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Write a caption...",
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16,
+                          ),
                         ),
+                        maxLines: 8,
                       ),
                     ),
-                  )),
-              SizedBox(width: 8),
-              const Divider(),
-            ],
-          )
-        ],
-      ),
-    );
+                    SizedBox(
+                        width: 45,
+                        height: 45,
+                        child: AspectRatio(
+                          aspectRatio: 487 / 451,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: MemoryImage(_file!),
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          ),
+                        )),
+                    SizedBox(width: 8),
+                    const Divider(),
+                  ],
+                )
+              ],
+            ),
+          );
   }
 }
