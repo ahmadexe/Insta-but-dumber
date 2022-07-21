@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_social/Models/model_user.dart';
@@ -16,13 +15,24 @@ class MobileLayout extends StatefulWidget {
 class _MobileLayoutState extends State<MobileLayout> {
 
   int _page = 0;
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  void navigationTapped(int page) {
+
+  }
 
   @override
   Widget build(BuildContext context) {
     ModelUser? user = Provider.of<UserProvider>(context).user;
     return Scaffold(
-      body: Center(
-        child: Text("this is mobile"),
+      body: const Center(
+        child:  Text("this is mobile"),
       ),
       bottomNavigationBar: CupertinoTabBar(
         // ignore: prefer_const_literals_to_create_immutables
