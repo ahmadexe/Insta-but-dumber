@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_social/Models/model_user.dart';
 import 'package:flutter_social/Providers/user_provider.dart';
+import 'package:flutter_social/Screens/comments_screen.dart';
 import 'package:flutter_social/Services/firestore_methods.dart';
 import 'package:flutter_social/Widgets/like_animation.dart';
 import 'package:flutter_social/utils/colors.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class PostCard extends StatefulWidget {
@@ -118,7 +120,7 @@ class _PostCardState extends State<PostCard> {
                   const SizedBox(width: 8),
                   IconButton(
                     icon: const Icon(Icons.chat_bubble_outline),
-                    onPressed: () {},
+                    onPressed: () {Get.to(CommentsScreen());},
                   ),
                 ],
               ),
@@ -168,7 +170,7 @@ class _PostCardState extends State<PostCard> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {Get.to(CommentsScreen());},
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 4),
                     child: Text(
