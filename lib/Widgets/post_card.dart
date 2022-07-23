@@ -120,7 +120,7 @@ class _PostCardState extends State<PostCard> {
                   const SizedBox(width: 8),
                   IconButton(
                     icon: const Icon(Icons.chat_bubble_outline),
-                    onPressed: () {Get.to(CommentsScreen());},
+                    onPressed: () {Get.to(CommentsScreen(postId: widget.snap['postId']));},
                   ),
                 ],
               ),
@@ -170,7 +170,7 @@ class _PostCardState extends State<PostCard> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {Get.to(CommentsScreen());},
+                  onTap: () {Get.to(CommentsScreen(postId: widget.snap['postId']));},
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 4),
                     child: Text(
