@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_social/Models/model_user.dart';
 import 'package:flutter_social/Providers/user_provider.dart';
+import 'package:flutter_social/Services/firestore_methods.dart';
 import 'package:flutter_social/Widgets/like_animation.dart';
 import 'package:flutter_social/utils/colors.dart';
 import 'package:provider/provider.dart';
@@ -53,11 +54,12 @@ class _PostCardState extends State<PostCard> {
           ),
 
           GestureDetector(
-            onDoubleTap: () {
-              print("Is this working?");
+            onDoubleTap: () async {
               setState(() {
                 isLikeAnimating = true;
               });
+              await FirestoreMethods().likePost(
+                  widget.snap['postId'], user!.uid, widget.snap['likes']);
             },
             child: Stack(alignment: Alignment.center, children: [
               SizedBox(
@@ -96,9 +98,21 @@ class _PostCardState extends State<PostCard> {
                   LikeAnimation(
                     isAnimating: widget.snap['likes'].contains(user?.uid),
                     isLiked: true,
-                    child: IconButton(
+                    child: (widget.snap['likes'].contains(user?.uid))?
+                    IconButton(
+                      icon: const Icon(Icons.favorite, color: Colors.red,),
+                      onPressed: () async {
+                        await FirestoreMethods().likePost(widget.snap['postId'],
+                            user!.uid, widget.snap['likes']);
+                      },
+                    )
+                    :
+                     IconButton(
                       icon: const Icon(Icons.favorite_border),
-                      onPressed: () {},
+                      onPressed: () async {
+                        await FirestoreMethods().likePost(widget.snap['postId'],
+                            user!.uid, widget.snap['likes']);
+                      },
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -123,7 +137,6 @@ class _PostCardState extends State<PostCard> {
               )
             ],
           ),
-          const Divider(),
           //! Comments and Likes portion
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -136,7 +149,7 @@ class _PostCardState extends State<PostCard> {
                         .textTheme
                         .subtitle2!
                         .copyWith(fontWeight: FontWeight.w800),
-                    child: Text(widget.snap['likes'].length.toString(),
+                    child: Text("${widget.snap['likes'].length} likes",
                         style: Theme.of(context).textTheme.bodyText2)),
                 Container(
                   width: double.infinity,

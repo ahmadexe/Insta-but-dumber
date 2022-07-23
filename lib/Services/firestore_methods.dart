@@ -33,4 +33,21 @@ class FirestoreMethods {
     }
     return res;
   }
+
+  Future <void> likePost(String postId, String uid, List like) async {
+    try {
+    if (like.contains(uid)) {
+      _firestore.collection('posts').doc(postId).update({
+        'likes': FieldValue.arrayRemove([uid])
+      });
+    } else {
+      _firestore.collection('posts').doc(postId).update({
+        'likes': FieldValue.arrayUnion([uid])
+      });
+    }
+    } catch (e) {
+      print(e);
+    }
+  } 
+
 }
