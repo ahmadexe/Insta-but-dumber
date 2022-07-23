@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_social/utils/colors.dart';
 
 class CommentCard extends StatefulWidget {
-  const CommentCard({super.key});
+  final snap;
+  const CommentCard({required this.snap, super.key});
 
   @override
   State<CommentCard> createState() => _CommentCardState();
@@ -19,7 +20,7 @@ class _CommentCardState extends State<CommentCard> {
           CircleAvatar(
             radius: 20,
             backgroundImage: NetworkImage(
-              "https://i.pravatar.cc/300",
+              widget.snap['profilePic']
             ),
           ),
           Expanded(
@@ -32,14 +33,14 @@ class _CommentCardState extends State<CommentCard> {
                   child: RichText(text: TextSpan(
                     children: [
                       TextSpan(
-                      text: "John Doe",
+                      text: widget.snap['name'],
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     TextSpan(
-                      text: "   Lorem ipsum dolor sit amet.",
+                      text: "  ${widget.snap['text']}",
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.white,

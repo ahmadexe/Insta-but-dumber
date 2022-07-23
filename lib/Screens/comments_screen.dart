@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_social/Models/model_user.dart';
 import 'package:flutter_social/Providers/user_provider.dart';
@@ -33,11 +35,31 @@ class _CommentsScreenState extends State<CommentsScreen> {
             onPressed: () {
               Get.back();
             },
-            icon: Icon(Icons.arrow_back)),
-        title: Text("Comments"),
+            icon: const Icon(Icons.arrow_back)),
+        title: const Text("Comments"),
         backgroundColor: mobileBackgroundColor,
       ),
-      body: CommentCard(),
+      body: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('posts')
+              .doc(widget.postId)
+              .collection('comments')
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                return CommentCard(
+                  snap: snapshot.data!.docs[index].data(),
+                );
+              },
+            );
+          }),
       bottomNavigationBar: SafeArea(
           child: Container(
         height: kToolbarHeight,
@@ -48,7 +70,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
             CircleAvatar(
               radius: 20,
               backgroundImage: NetworkImage(
-                "https://i.pravatar.cc/300",
+                user!.photoUrl!,
               ),
             ),
             Expanded(
@@ -56,7 +78,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 padding: const EdgeInsets.only(left: 16, right: 8),
                 child: TextField(
                   controller: _commentController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: "Write a comment...",
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey),
@@ -72,9 +94,9 @@ class _CommentsScreenState extends State<CommentsScreen> {
               ),
             ),
             IconButton(
-              icon: Icon(Icons.send),
+              icon: const Icon(Icons.send),
               onPressed: () {
-                FirestoreMethods().postComment(widget.postId, user!.username,
+                FirestoreMethods().postComment(widget.postId, user.username,
                     user.photoUrl!, _commentController.text);
                 _commentController.clear();
               },
