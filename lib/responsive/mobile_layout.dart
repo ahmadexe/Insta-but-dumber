@@ -59,7 +59,7 @@ class _MobileLayoutState extends State<MobileLayout> {
         ],
       ),
       bottomNavigationBar: CupertinoTabBar(
-
+        backgroundColor: mobileBackgroundColor,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home, color: _page == 0? Colors.white : secondaryColor,),
