@@ -19,6 +19,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
 
   int _posts = 0;
+  bool _isFollowing = false;
   @override
   void initState() {
     super.initState();
@@ -35,6 +36,11 @@ class _ProfileState extends State<Profile> {
         });
       }
     }
+    if (widget.snap['following'].contains(Provider.of<UserProvider>(context, listen: false).user!.uid)) {
+      setState(() {
+        _isFollowing = true;
+      });
+    }
   }
 
   @override
@@ -45,7 +51,7 @@ class _ProfileState extends State<Profile> {
             onPressed: () {
               Get.back();
             },
-            icon: Icon(Icons.arrow_back)),
+            icon: const Icon(Icons.arrow_back)),
         title: Text(widget.snap['username']),
         backgroundColor: mobileBackgroundColor,
       ),
@@ -77,16 +83,17 @@ class _ProfileState extends State<Profile> {
             const SizedBox(height: 10),
             Row(
               children: [
+                !_isFollowing?
                 InkWell(
                   onTap: () {},
                   child: Container(
                     alignment: Alignment.center,
                     height: 30,
                     width: MediaQuery.of(context).size.width * 0.8,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       color: Colors.blueAccent,
-                      boxShadow: const [
+                      boxShadow: [
                         BoxShadow(
                           color: Colors.black,
                           blurRadius: 2.0,
@@ -101,16 +108,43 @@ class _ProfileState extends State<Profile> {
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
-                ),
-                SizedBox(width: 5),
+                )
+                :
+                InkWell(
+                  onTap: () {},
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 30,
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      color: Colors.grey[900],
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 2.0,
+                          spreadRadius: 0.0,
+                          offset: Offset(
+                              2.0, 2.0), // shadow direction: bottom right
+                        )
+                      ],
+                    ),
+                    child: const Text(
+                      "Unfollow",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                )
+                ,
+                const SizedBox(width: 5),
                 InkWell(
                   onTap: () {},
                   child: Container(
                     height: 30,
                     width: 30,
-                    child: Icon(Icons.person_add),
+                    child: const Icon(Icons.person_add),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                       color: Colors.grey[900],
                       boxShadow: const [
                         BoxShadow(
@@ -138,7 +172,7 @@ class _ProfileState extends State<Profile> {
                   }
                   return Expanded(
                     child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisSpacing: 1,
                           mainAxisSpacing: 1,
                           crossAxisCount: 3,
@@ -174,14 +208,14 @@ counts(String field, String number) {
     children: [
       Text(
         number,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
         ),
       ),
       Text(
         field,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 16,
         ),
       ),
