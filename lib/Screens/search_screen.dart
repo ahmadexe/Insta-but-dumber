@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_social/Models/model_user.dart';
+import 'package:flutter_social/Providers/user_provider.dart';
 import 'package:flutter_social/Screens/others_profile_screen.dart';
+import 'package:flutter_social/Screens/user_profile_screen.dart';
 import 'package:flutter_social/utils/colors.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -17,6 +21,7 @@ class _SearchScreenState extends State<SearchScreen> {
   TextEditingController _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    ModelUser? user = Provider.of<UserProvider>(context).user;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: mobileBackgroundColor,
@@ -25,7 +30,7 @@ class _SearchScreenState extends State<SearchScreen> {
             decoration: InputDecoration(
               hintText: "Search",
               suffixIcon: IconButton(
-                icon: Icon(Icons.clear),
+                icon: const Icon(Icons.clear),
                 onPressed: () {
                   _searchText = "";
                   _searchController.clear();
@@ -56,7 +61,8 @@ class _SearchScreenState extends State<SearchScreen> {
             ? FutureBuilder(
                 future: FirebaseFirestore.instance
                     .collection('users')
-                    .where('username', isLessThanOrEqualTo: _searchController.text)
+                    .where('username',
+                        isLessThanOrEqualTo: _searchController.text)
                     .get(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -74,7 +80,16 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         title:
                             Text(snapshot.data!.docs[index].data()['username']),
-                        onTap: () {Get.to(Profile());},
+                        onTap: () {
+                          if (user!.uid !=
+                              snapshot.data!.docs[index].data()['uid']) {
+                            Get.to(Profile(
+                              snap: snapshot.data!.docs[index].data(),
+                            ));
+                          } else {
+                            Get.to(const UserProfile());
+                          }
+                        },
                       );
                     },
                   );
@@ -88,7 +103,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     );
                   }
                   return GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      physics: const ScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisSpacing: 1,
                         mainAxisSpacing: 1,
                         crossAxisCount: 3,

@@ -1,20 +1,52 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_social/Providers/user_provider.dart';
+import 'package:flutter_social/responsive/mobile_layout.dart';
+import 'package:flutter_social/responsive/responsive_layout_screen.dart';
+import 'package:flutter_social/responsive/web_layout.dart';
 import 'package:flutter_social/utils/colors.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  final snap;
+  const Profile({super.key, required this.snap});
 
   @override
   State<Profile> createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
+
+  int _posts = 0;
+  @override
+  void initState() {
+    super.initState();
+    addData();
+  }
+
+  addData() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    QuerySnapshot snapshot = await firestore.collection("posts").get();
+    for (int i = 0; i < snapshot.docs.length; i++) {
+      if (snapshot.docs[i]["uid"] == widget.snap["uid"]) {
+        setState(() {
+          _posts++;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: (){}, icon: Icon(Icons.arrow_back)),
-        title: const Text("username"),
+        leading: IconButton(
+            onPressed: () {
+              Get.back();
+            },
+            icon: Icon(Icons.arrow_back)),
+        title: Text(widget.snap['username']),
         backgroundColor: mobileBackgroundColor,
       ),
       body: Padding(
@@ -25,23 +57,23 @@ class _ProfileState extends State<Profile> {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage('https://i.pravatar.cc/300'),
+                  backgroundImage: NetworkImage(widget.snap['photoUrl']),
                   radius: 40,
                 ),
                 Expanded(
-                  child: counts("Posts", '25'),
+                  child: counts("Posts", _posts.toString()),
                 ),
                 Expanded(
-                  child: counts("Followers", '205'),
+                  child: counts("Followers", widget.snap['followers'].length.toString()),
                 ),
                 Expanded(
-                  child: counts("Following", '2005'),
+                  child: counts("Following", widget.snap['following'].length.toString()),
                 ),
               ],
             ),
             const SizedBox(height: 10),
-            Text("username"),
-            Text("this is a bio"),
+            Text(widget.snap['username']),
+            Text(widget.snap['bio']),
             const SizedBox(height: 10),
             Row(
               children: [
@@ -59,7 +91,8 @@ class _ProfileState extends State<Profile> {
                           color: Colors.black,
                           blurRadius: 2.0,
                           spreadRadius: 0.0,
-                          offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                          offset: Offset(
+                              2.0, 2.0), // shadow direction: bottom right
                         )
                       ],
                     ),
@@ -71,63 +104,64 @@ class _ProfileState extends State<Profile> {
                 ),
                 SizedBox(width: 5),
                 InkWell(
-                  onTap: (){},
+                  onTap: () {},
                   child: Container(
                     height: 30,
                     width: 30,
                     child: Icon(Icons.person_add),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        color: Colors.grey[900],
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black,
-                            blurRadius: 2.0,
-                            spreadRadius: 0.0,
-                            offset: Offset(2.0, 2.0), // shadow direction: bottom right
-                          )
-                        ],
-                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.grey[900],
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 2.0,
+                          spreadRadius: 0.0,
+                          offset: Offset(
+                              2.0, 2.0), // shadow direction: bottom right
+                        )
+                      ],
+                    ),
                   ),
                 )
               ],
             ),
-            
+
             const SizedBox(height: 40),
-            // FutureBuilder(
-            //     future: FirebaseFirestore.instance.collection('posts').get(),
-            //     builder: ((context, snapshot) {
-            //       if (snapshot.connectionState == ConnectionState.waiting) {
-            //         return const Center(
-            //           child: CircularProgressIndicator(),
-            //         );
-            //       }
-            //       return Expanded(
-            //         child: GridView.builder(
-            //             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            //               crossAxisSpacing: 1,
-            //               mainAxisSpacing: 1,
-            //               crossAxisCount: 3,
-            //             ),
-            //             itemCount: snapshot.data!.docs.length,
-            //             itemBuilder: (context, index) {
-            //               return snapshot.data!.docs[index].data()['uid'] == user.uid?
-            //                Container(
-            //                 height: MediaQuery.of(context).size.height / 5,
-            //                 width: MediaQuery.of(context).size.width / 3.3,
-            //                 child: Card(
-            //                   child: Image.network(
-            //                     snapshot.data!.docs[index].data()['postUrl'],
-            //                     fit: BoxFit.fill,
-            //                   ),
-            //                 ),
-            //               )
-            //               :
-            //               Container(
-            //               );
-            //             }),
-            //       );
-            //     }))
+            FutureBuilder(
+                future: FirebaseFirestore.instance.collection('posts').get(),
+                builder: ((context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return Expanded(
+                    child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisSpacing: 1,
+                          mainAxisSpacing: 1,
+                          crossAxisCount: 3,
+                        ),
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          return snapshot.data!.docs[index].data()['uid'] == widget.snap['uid']?
+                           Container(
+                            height: MediaQuery.of(context).size.height / 5,
+                            width: MediaQuery.of(context).size.width / 3.3,
+                            child: Card(
+                              child: Image.network(
+                                snapshot.data!.docs[index].data()['postUrl'],
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          )
+                          :
+                          Container(
+                          );
+                        }),
+                  );
+                }))
           ],
         ),
       ),
