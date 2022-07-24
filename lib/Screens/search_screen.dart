@@ -94,8 +94,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     },
                   );
                 })
-            : FutureBuilder(
-                future: FirebaseFirestore.instance.collection('posts').get(),
+            : StreamBuilder(
+                stream: FirebaseFirestore.instance.collection('posts').snapshots(),
                 builder: ((context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
