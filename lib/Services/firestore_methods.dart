@@ -34,27 +34,33 @@ class FirestoreMethods {
     return res;
   }
 
-  Future <void> likePost(String postId, String uid, List like) async {
+  Future<void> likePost(String postId, String uid, List like) async {
     try {
-    if (like.contains(uid)) {
-      _firestore.collection('posts').doc(postId).update({
-        'likes': FieldValue.arrayRemove([uid])
-      });
-    } else {
-      _firestore.collection('posts').doc(postId).update({
-        'likes': FieldValue.arrayUnion([uid])
-      });
-    }
+      if (like.contains(uid)) {
+        _firestore.collection('posts').doc(postId).update({
+          'likes': FieldValue.arrayRemove([uid])
+        });
+      } else {
+        _firestore.collection('posts').doc(postId).update({
+          'likes': FieldValue.arrayUnion([uid])
+        });
+      }
     } catch (e) {
       print(e);
     }
-  } 
+  }
 
-  Future <void> postComment(String postId, String name, String profilePic, String text) async {
+  Future<void> postComment(
+      String postId, String name, String profilePic, String text) async {
     String commentId = const Uuid().v1();
     try {
       FirebaseFirestore _firestore = FirebaseFirestore.instance;
-      await _firestore.collection('posts').doc(postId).collection('comments').doc(commentId).set({
+      await _firestore
+          .collection('posts')
+          .doc(postId)
+          .collection('comments')
+          .doc(commentId)
+          .set({
         'commentId': commentId,
         'name': name,
         'profilePic': profilePic,
@@ -64,7 +70,5 @@ class FirestoreMethods {
     } catch (e) {
       print(e);
     }
-    
-  } 
-
+  }
 }
