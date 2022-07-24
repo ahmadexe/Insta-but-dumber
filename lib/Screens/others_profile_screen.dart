@@ -130,7 +130,7 @@ class _ProfileState extends State<Profile> {
                     : InkWell(
                         onTap: () async {
                           setState(() {
-                            _isFollowing = true;
+                            _isFollowing = false;
                             followersCount--;
                           });
                           await FirestoreMethods().follow(

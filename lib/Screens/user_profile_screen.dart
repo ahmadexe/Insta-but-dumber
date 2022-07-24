@@ -45,7 +45,12 @@ class _UserProfileState extends State<UserProfile> {
         title: const Text("User Profile"),
         backgroundColor: mobileBackgroundColor,
       ),
-      body: Padding(
+      body: user == null?
+      Center(
+        child: CircularProgressIndicator(),
+      )
+      :
+      Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +58,7 @@ class _UserProfileState extends State<UserProfile> {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage(user!.photoUrl!),
+                  backgroundImage: NetworkImage(user.photoUrl!),
                   radius: 40,
                 ),
                 Expanded(
