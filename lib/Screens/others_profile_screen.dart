@@ -43,8 +43,6 @@ class _ProfileState extends State<Profile> {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     QuerySnapshot snapshot = await firestore.collection("posts").get();
 
-    
-
     for (int i = 0; i < snapshot.docs.length; i++) {
       if (snapshot.docs[i]["uid"] == widget.snap["uid"]) {
         setState(() {

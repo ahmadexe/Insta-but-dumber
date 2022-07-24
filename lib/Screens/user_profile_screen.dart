@@ -5,6 +5,7 @@ import 'package:flutter_social/Globals/globals.dart';
 import 'package:flutter_social/Models/model_user.dart';
 import 'package:flutter_social/Providers/user_provider.dart';
 import 'package:flutter_social/Screens/home_screen.dart';
+import 'package:flutter_social/Screens/login_screen.dart';
 import 'package:flutter_social/responsive/mobile_layout.dart';
 import 'package:flutter_social/utils/colors.dart';
 import 'package:get/get.dart';
@@ -140,7 +141,10 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                   const SizedBox(height: 10),
                   InkWell(
-                    onTap: () {},
+                    onTap: () async {
+                      await FirebaseAuth.instance.signOut();
+                      Get.offAll(const LoginScreen());
+                    },
                     child: Container(
                       alignment: Alignment.center,
                       height: 30,
