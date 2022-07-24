@@ -16,6 +16,27 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
+
+  int _posts = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    addData();
+  }
+
+  addData() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    QuerySnapshot snapshot = await firestore.collection("posts").get();
+    for (int i = 0; i < snapshot.docs.length; i++) {
+      if (snapshot.docs[i]["uid"] == Provider.of<UserProvider>(context, listen: false).user!.uid) {
+        setState(() {
+          _posts++;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ModelUser? user = Provider.of<UserProvider>(context).user;
@@ -32,23 +53,23 @@ class _UserProfileState extends State<UserProfile> {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage("https://picsum.photos/200"),
+                  backgroundImage: NetworkImage(user!.photoUrl!),
                   radius: 40,
                 ),
                 Expanded(
-                  child: counts("Posts", '25'),
+                  child: counts("Posts", _posts.toString()),
                 ),
                 Expanded(
-                  child: counts("Followers", '205'),
+                  child: counts("Followers", user.followers.length.toString()),
                 ),
                 Expanded(
-                  child: counts("Following", '2500'),
+                  child: counts("Following", user.following.length.toString()),
                 ),
               ],
             ),
             const SizedBox(height: 10),
-            const Text("Username"),
-            const Text("This is a bio"),
+            Text(user.username),
+            Text(user.bio),
             const SizedBox(height: 10),
             Row(
               children: [
@@ -70,7 +91,7 @@ class _UserProfileState extends State<UserProfile> {
                         )
                       ],
                     ),
-                    child: Text(
+                    child: const Text(
                       "Edit Profile",
                       style: TextStyle(fontSize: 16),
                     ),
@@ -117,7 +138,7 @@ class _UserProfileState extends State<UserProfile> {
                         ),
                         itemCount: snapshot.data!.docs.length,
                         itemBuilder: (context, index) {
-                          return snapshot.data!.docs[index].data()['uid'] == user!.uid?
+                          return snapshot.data!.docs[index].data()['uid'] == user.uid?
                            Container(
                             height: MediaQuery.of(context).size.height / 5,
                             width: MediaQuery.of(context).size.width / 3.3,
