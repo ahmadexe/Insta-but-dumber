@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_social/Models/model_user.dart';
 import 'package:flutter_social/Providers/user_provider.dart';
@@ -120,6 +121,31 @@ class _UserProfileState extends State<UserProfile> {
                 )
               ],
             ),
+            const SizedBox(height: 10),
+            InkWell(
+                  onTap: () {},
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 30,
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.grey[900],
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 2.0,
+                          spreadRadius: 0.0,
+                          offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                        )
+                      ],
+                    ),
+                    child: const Text(
+                      "Log out",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
             const SizedBox(height: 40),
             FutureBuilder(
                 future: FirebaseFirestore.instance.collection('posts').get(),
