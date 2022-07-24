@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_social/Providers/user_provider.dart';
 import 'package:flutter_social/Services/firestore_methods.dart';
+import 'package:flutter_social/globals/globals.dart';
 import 'package:flutter_social/responsive/mobile_layout.dart';
 import 'package:flutter_social/responsive/responsive_layout_screen.dart';
 import 'package:flutter_social/responsive/web_layout.dart';
@@ -100,6 +101,7 @@ class _ProfileState extends State<Profile> {
                           setState(() {
                             _isFollowing = true;
                             followersCount++;
+                            Globals.following++;
                           });
                           await FirestoreMethods().follow(
                               userId: user!.uid, followId: widget.snap['uid']);
@@ -132,6 +134,7 @@ class _ProfileState extends State<Profile> {
                           setState(() {
                             _isFollowing = false;
                             followersCount--;
+                            Globals.following--;
                           });
                           await FirestoreMethods().follow(
                               userId: user!.uid, followId: widget.snap['uid']);

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_social/Globals/globals.dart';
 import 'package:flutter_social/Models/model_user.dart';
 import 'package:flutter_social/Providers/user_provider.dart';
 import 'package:flutter_social/Screens/home_screen.dart';
@@ -18,6 +19,8 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   int _posts = 0;
+  int followers = 0;
+  int following = 0;
   @override
   void initState() {
     super.initState();
@@ -25,6 +28,13 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   addData() async {
+    await Globals().getGlobals();
+
+    setState(() {
+      followers = Globals.followers;
+      following = Globals.following;
+    });
+
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     QuerySnapshot snapshot = await firestore.collection("posts").get();
     for (int i = 0; i < snapshot.docs.length; i++) {
@@ -45,156 +55,163 @@ class _UserProfileState extends State<UserProfile> {
         title: const Text("User Profile"),
         backgroundColor: mobileBackgroundColor,
       ),
-      body: user == null?
-      Center(
-        child: CircularProgressIndicator(),
-      )
-      :
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(user.photoUrl!),
-                  radius: 40,
-                ),
-                Expanded(
-                  child: counts("Posts", _posts.toString()),
-                ),
-                Expanded(
-                  child: counts("Followers", user.followers.length.toString()),
-                ),
-                Expanded(
-                  child: counts("Following", user.following.length.toString()),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Text(user.username),
-            Text(user.bio),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 30,
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      color: Colors.grey[900],
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black,
-                          blurRadius: 2.0,
-                          spreadRadius: 0.0,
-                          offset: Offset(
-                              2.0, 2.0), // shadow direction: bottom right
-                        )
-                      ],
-                    ),
-                    child: const Text(
-                      "Edit Profile",
-                      style: TextStyle(fontSize: 16),
+      body: user == null
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(user.photoUrl!),
+                        radius: 40,
+                      ),
+                      Expanded(
+                        child: counts("Posts", _posts.toString()),
+                      ),
+                      Expanded(
+                        child: counts("Followers", followers.toString()),
+                      ),
+                      Expanded(
+                        child: counts("Following", following.toString()),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(user.username),
+                  Text(user.bio),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: () {},
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: 30,
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                            color: Colors.grey[900],
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black,
+                                blurRadius: 2.0,
+                                spreadRadius: 0.0,
+                                offset: Offset(
+                                    2.0, 2.0), // shadow direction: bottom right
+                              )
+                            ],
+                          ),
+                          child: const Text(
+                            "Edit Profile",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      InkWell(
+                        onTap: () {},
+                        child: Container(
+                          height: 30,
+                          width: 30,
+                          child: const Icon(Icons.person_add),
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                            color: Colors.grey[900],
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black,
+                                blurRadius: 2.0,
+                                spreadRadius: 0.0,
+                                offset: Offset(
+                                    2.0, 2.0), // shadow direction: bottom right
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  InkWell(
+                    onTap: () {},
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 30,
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                        color: Colors.grey[900],
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black,
+                            blurRadius: 2.0,
+                            spreadRadius: 0.0,
+                            offset: Offset(
+                                2.0, 2.0), // shadow direction: bottom right
+                          )
+                        ],
+                      ),
+                      child: const Text(
+                        "Log out",
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 5),
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    height: 30,
-                    width: 30,
-                    child: const Icon(Icons.person_add),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      color: Colors.grey[900],
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black,
-                          blurRadius: 2.0,
-                          spreadRadius: 0.0,
-                          offset: Offset(
-                              2.0, 2.0), // shadow direction: bottom right
-                        )
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(height: 10),
-            InkWell(
-              onTap: () {},
-              child: Container(
-                alignment: Alignment.center,
-                height: 30,
-                width: MediaQuery.of(context).size.width * 0.8,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  color: Colors.grey[900],
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 2.0,
-                      spreadRadius: 0.0,
-                      offset:
-                          Offset(2.0, 2.0), // shadow direction: bottom right
-                    )
-                  ],
-                ),
-                child: const Text(
-                  "Log out",
-                  style: TextStyle(fontSize: 16),
-                ),
+                  const SizedBox(height: 40),
+                  FutureBuilder(
+                      future:
+                          FirebaseFirestore.instance.collection('posts').get(),
+                      builder: ((context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        return Expanded(
+                          child: GridView.builder(
+                              physics: const ScrollPhysics(),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisSpacing: 1,
+                                mainAxisSpacing: 1,
+                                crossAxisCount: 3,
+                              ),
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                return snapshot.data!.docs[index]
+                                            .data()['uid'] ==
+                                        user.uid
+                                    ? Container(
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                5,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                3.3,
+                                        child: Card(
+                                          child: Image.network(
+                                            snapshot.data!.docs[index]
+                                                .data()['postUrl'],
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                      )
+                                    : Container();
+                              }),
+                        );
+                      }))
+                ],
               ),
             ),
-            const SizedBox(height: 40),
-            FutureBuilder(
-                future: FirebaseFirestore.instance.collection('posts').get(),
-                builder: ((context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  return Expanded(
-                    child: GridView.builder(
-                        physics: const ScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisSpacing: 1,
-                          mainAxisSpacing: 1,
-                          crossAxisCount: 3,
-                        ),
-                        itemCount: snapshot.data!.docs.length,
-                        itemBuilder: (context, index) {
-                          return snapshot.data!.docs[index].data()['uid'] ==
-                                  user.uid
-                              ? Container(
-                                  height:
-                                      MediaQuery.of(context).size.height / 5,
-                                  width:
-                                      MediaQuery.of(context).size.width / 3.3,
-                                  child: Card(
-                                    child: Image.network(
-                                      snapshot.data!.docs[index]
-                                          .data()['postUrl'],
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                )
-                              : Container();
-                        }),
-                  );
-                }))
-          ],
-        ),
-      ),
     );
   }
 }
