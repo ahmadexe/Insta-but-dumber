@@ -4,6 +4,7 @@ import 'package:flutter_social/Models/model_user.dart';
 import 'package:flutter_social/Providers/user_provider.dart';
 import 'package:flutter_social/Screens/add_post_screen.dart';
 import 'package:flutter_social/Screens/home_screen.dart';
+import 'package:flutter_social/Screens/search_screen.dart';
 import 'package:flutter_social/utils/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -50,7 +51,7 @@ class _MobileLayoutState extends State<MobileLayout> {
         onPageChanged: onPageChanged,
         children: const [
           HomeScreen(),
-          Text(" Search "),
+          SearchScreen(),
           AddPost(),
           Text(" favs "),
           Text(" profile "),
