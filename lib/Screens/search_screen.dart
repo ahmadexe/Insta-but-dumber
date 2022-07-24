@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_social/Screens/others_profile_screen.dart';
 import 'package:flutter_social/utils/colors.dart';
+import 'package:get/get.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -72,7 +74,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         title:
                             Text(snapshot.data!.docs[index].data()['username']),
-                        onTap: () {},
+                        onTap: () {Get.to(Profile());},
                       );
                     },
                   );

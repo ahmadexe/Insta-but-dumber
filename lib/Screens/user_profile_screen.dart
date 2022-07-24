@@ -19,7 +19,6 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
 
   int _posts = 0;
-
   @override
   void initState() {
     super.initState();
