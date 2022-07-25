@@ -36,27 +36,37 @@ class _SignupScreenState extends State<SignupScreen> {
     setState(() {
       _isLoading = true;
     });
+    // if (_image == null) {
+    //   Get.snackbar("Error", "Fill all the required fields, select a profile picture if you haven't already",
+    //       backgroundColor: Colors.red[900],
+    //       colorText: Colors.white,
+    //       icon: const Icon(Icons.error, color: Colors.white),
+    //       snackPosition: SnackPosition.TOP);
+    //   Get.offAll(SignupScreen());
+    //   return;  
+    // }
     String result = await Authentications().signUp(
         email: email,
         password: password,
         username: username,
         bio: bio,
         file: _image!);
+    
     if (result == 'A verification email has been sent to your email address') {
       Get.snackbar("Success", result,
           backgroundColor: Colors.teal[900],
           colorText: Colors.white,
           icon: const Icon(Icons.check, color: Colors.white),
           snackPosition: SnackPosition.TOP);
-      Get.to(ResponsiveLayout(
-          mobileLayout: MobileLayout(), webLayout: WebLayout()));
+          Get.offAll(LoginScreen());
+
     } else {
       Get.snackbar("Error", result,
           backgroundColor: Colors.red[900],
           colorText: Colors.white,
           icon: const Icon(Icons.error, color: Colors.white),
           snackPosition: SnackPosition.TOP);
-      Get.to(LoginScreen());
+      Get.offAll(LoginScreen());
     }
     setState(() {
       _isLoading = false;
@@ -141,7 +151,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     colorText: Colors.white,
                     icon: const Icon(Icons.timelapse, color: Colors.white),
                     snackPosition: SnackPosition.TOP);
-                signUp(
+                await signUp(
                     email: emailController.text.toString().trim(),
                     password: passwordController.text.toString().trim(),
                     username: usernameController.text.toString().trim(),

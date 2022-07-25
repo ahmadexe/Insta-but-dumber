@@ -36,10 +36,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider(),),
+        ChangeNotifierProvider(
+          create: (_) => UserProvider(),
+        ),
       ],
       child: GetMaterialApp(
-        debugShowCheckedModeBanner: false,
+          debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           theme: ThemeData.dark()
               .copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
@@ -55,6 +57,10 @@ class MyApp extends StatelessWidget {
                 );
               }
               if (snapshot.hasData &&
+                  (FirebaseAuth.instance.currentUser!.emailVerified == false)) {
+                return const LoginScreen();
+              }
+              else if (snapshot.hasData &&
                   FirebaseAuth.instance.currentUser!.emailVerified) {
                 return const ResponsiveLayout(
                   mobileLayout: MobileLayout(),

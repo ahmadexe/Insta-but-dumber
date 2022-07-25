@@ -20,10 +20,17 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool _isLoading = false;
 
   void login({required String email, required String password}) async {
+    setState(() {
+      _isLoading = true;
+    });
     String result =
         await Authentications().Login(email: email, password: password);
+    setState(() {
+      _isLoading = false;
+    });
     if (result == 'Success') {
       Get.to(ResponsiveLayout(
           mobileLayout: MobileLayout(), webLayout: WebLayout()));
@@ -41,10 +48,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: SafeArea(
           child: Container(
-        padding: MediaQuery.of(context).size.width > webScreenSize?
-        EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 3)
-        : 
-        const EdgeInsets.symmetric(horizontal: 32),
+        padding: MediaQuery.of(context).size.width > webScreenSize
+            ? EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width / 3)
+            : const EdgeInsets.symmetric(horizontal: 32),
         width: double.infinity,
         child: Column(
           children: [
@@ -83,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4)),
                     color: blueColor),
-                child: const Text("Log in"),
+                child: !_isLoading? const Text("Log in") : const CircularProgressIndicator(color: Colors.white,),
               ),
             ),
             const SizedBox(height: 12),
