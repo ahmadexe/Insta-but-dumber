@@ -174,7 +174,7 @@ class _PostCardState extends State<PostCard> {
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 4),
                     child: Text(
-                      "View all 150 comments...",
+                      "View all comments...",
                       style: TextStyle(color: secondaryColor, fontSize: 16),
                     ),
                   ),
