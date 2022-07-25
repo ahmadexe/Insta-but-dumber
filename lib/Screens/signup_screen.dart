@@ -36,15 +36,18 @@ class _SignupScreenState extends State<SignupScreen> {
     setState(() {
       _isLoading = true;
     });
-    // if (_image == null) {
-    //   Get.snackbar("Error", "Fill all the required fields, select a profile picture if you haven't already",
-    //       backgroundColor: Colors.red[900],
-    //       colorText: Colors.white,
-    //       icon: const Icon(Icons.error, color: Colors.white),
-    //       snackPosition: SnackPosition.TOP);
-    //   Get.offAll(SignupScreen());
-    //   return;  
-    // }
+    if (_image == null) {
+      Get.snackbar("Error", "Fill all the required fields, select a profile picture if you haven't already",
+          backgroundColor: Colors.red[900],
+          colorText: Colors.white,
+          icon: const Icon(Icons.error, color: Colors.white),
+          snackPosition: SnackPosition.TOP);
+      setState(() {
+      _isLoading = false;
+    });
+      Get.offAll(SignupScreen());
+      return;  
+    }
     String result = await Authentications().signUp(
         email: email,
         password: password,
