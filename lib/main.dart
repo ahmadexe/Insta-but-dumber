@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserProvider(),),
       ],
       child: GetMaterialApp(
+        debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           theme: ThemeData.dark()
               .copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
