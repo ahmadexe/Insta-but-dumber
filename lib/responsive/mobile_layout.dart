@@ -4,6 +4,7 @@ import 'package:flutter_social/Models/model_user.dart';
 import 'package:flutter_social/Providers/user_provider.dart';
 import 'package:flutter_social/Screens/add_post_screen.dart';
 import 'package:flutter_social/Screens/home_screen.dart';
+import 'package:flutter_social/Screens/no_screen.dart';
 import 'package:flutter_social/Screens/search_screen.dart';
 import 'package:flutter_social/Screens/user_profile_screen.dart';
 import 'package:flutter_social/utils/colors.dart';
@@ -54,7 +55,7 @@ class _MobileLayoutState extends State<MobileLayout> {
           HomeScreen(),
           SearchScreen(),
           AddPost(),
-          Text(" favs "),
+          NoScreen(),
           UserProfile(),
         ],
       ),
