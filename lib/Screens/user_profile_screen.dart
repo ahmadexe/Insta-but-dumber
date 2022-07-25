@@ -22,6 +22,7 @@ class _UserProfileState extends State<UserProfile> {
   int _posts = 0;
   int followers = 0;
   int following = 0;
+  List posts = [];
   @override
   void initState() {
     super.initState();
@@ -30,6 +31,7 @@ class _UserProfileState extends State<UserProfile> {
 
   addData() async {
     await Globals().getGlobals();
+    posts = await getPosts(FirebaseAuth.instance.currentUser!.uid);
 
     setState(() {
       followers = Globals.followers;
@@ -170,17 +172,52 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                   ),
                   const SizedBox(height: 40),
-                  FutureBuilder(
-                      future:
-                          FirebaseFirestore.instance.collection('posts').get(),
-                      builder: ((context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                        return Expanded(
+                  // FutureBuilder(
+                  //     future:
+                  //         FirebaseFirestore.instance.collection('posts').get(),
+                  //     builder: ((context, snapshot) {
+                  //       if (snapshot.connectionState ==
+                  //           ConnectionState.waiting) {
+                  //         return const Center(
+                  //           child: CircularProgressIndicator(),
+                  //         );
+                  //       }
+                  //       return Expanded(
+                  //         child: GridView.builder(
+                  //             physics: const ScrollPhysics(),
+                  //             gridDelegate:
+                  //                 const SliverGridDelegateWithFixedCrossAxisCount(
+                  //               crossAxisSpacing: 1,
+                  //               mainAxisSpacing: 1,
+                  //               crossAxisCount: 3,
+                  //             ),
+                  //             itemCount: snapshot.data!.docs.length,
+                  //             itemBuilder: (context, index) {
+                  //               return snapshot.data!.docs[index]
+                  //                           .data()['uid'] ==
+                  //                       user.uid
+                  //                   ? Container(
+                  //                       height:
+                  //                           MediaQuery.of(context).size.height /
+                  //                               5,
+                  //                       width:
+                  //                           MediaQuery.of(context).size.width /
+                  //                               3.3,
+                  //                       child: Card(
+                  //                         child: Image.network(
+                  //                           snapshot.data!.docs[index]
+                  //                               .data()['postUrl'],
+                  //                           fit: BoxFit.fill,
+                  //                         ),
+                  //                       ),
+                  //                     )
+                  //                   : Container(child: Text('.', style: TextStyle(color: mobileBackgroundColor),),);
+                  //             }),
+                  //       );
+                  //     }))
+
+
+                  Expanded(
                           child: GridView.builder(
                               physics: const ScrollPhysics(),
                               gridDelegate:
@@ -189,12 +226,9 @@ class _UserProfileState extends State<UserProfile> {
                                 mainAxisSpacing: 1,
                                 crossAxisCount: 3,
                               ),
-                              itemCount: snapshot.data!.docs.length,
+                              itemCount: posts.length,
                               itemBuilder: (context, index) {
-                                return snapshot.data!.docs[index]
-                                            .data()['uid'] ==
-                                        user.uid
-                                    ? Container(
+                                return Container(
                                         height:
                                             MediaQuery.of(context).size.height /
                                                 5,
@@ -203,22 +237,22 @@ class _UserProfileState extends State<UserProfile> {
                                                 3.3,
                                         child: Card(
                                           child: Image.network(
-                                            snapshot.data!.docs[index]
-                                                .data()['postUrl'],
+                                            posts[index],
                                             fit: BoxFit.fill,
                                           ),
                                         ),
-                                      )
-                                    : Container();
+                                      );
                               }),
-                        );
-                      }))
+                        )
                 ],
               ),
             ),
     );
   }
 }
+
+
+
 
 counts(String field, String number) {
   return Column(
@@ -238,4 +272,16 @@ counts(String field, String number) {
       ),
     ],
   );
+}
+
+Future<List<String>> getPosts(String userId) async {
+  List<String> posts = [];
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  QuerySnapshot snapshot = await firestore.collection("posts").get();
+  for (int i = 0; i < snapshot.docs.length; i++) {
+    if (snapshot.docs[i]['uid'] == userId) {
+      posts.add(snapshot.docs[i]['postUrl']);
+    }
+  }
+  return posts;
 }
