@@ -172,87 +172,35 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                   ),
                   const SizedBox(height: 40),
-                  // FutureBuilder(
-                  //     future:
-                  //         FirebaseFirestore.instance.collection('posts').get(),
-                  //     builder: ((context, snapshot) {
-                  //       if (snapshot.connectionState ==
-                  //           ConnectionState.waiting) {
-                  //         return const Center(
-                  //           child: CircularProgressIndicator(),
-                  //         );
-                  //       }
-                  //       return Expanded(
-                  //         child: GridView.builder(
-                  //             physics: const ScrollPhysics(),
-                  //             gridDelegate:
-                  //                 const SliverGridDelegateWithFixedCrossAxisCount(
-                  //               crossAxisSpacing: 1,
-                  //               mainAxisSpacing: 1,
-                  //               crossAxisCount: 3,
-                  //             ),
-                  //             itemCount: snapshot.data!.docs.length,
-                  //             itemBuilder: (context, index) {
-                  //               return snapshot.data!.docs[index]
-                  //                           .data()['uid'] ==
-                  //                       user.uid
-                  //                   ? Container(
-                  //                       height:
-                  //                           MediaQuery.of(context).size.height /
-                  //                               5,
-                  //                       width:
-                  //                           MediaQuery.of(context).size.width /
-                  //                               3.3,
-                  //                       child: Card(
-                  //                         child: Image.network(
-                  //                           snapshot.data!.docs[index]
-                  //                               .data()['postUrl'],
-                  //                           fit: BoxFit.fill,
-                  //                         ),
-                  //                       ),
-                  //                     )
-                  //                   : Container(child: Text('.', style: TextStyle(color: mobileBackgroundColor),),);
-                  //             }),
-                  //       );
-                  //     }))
-
-
                   Expanded(
-                          child: GridView.builder(
-                              physics: const ScrollPhysics(),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisSpacing: 1,
-                                mainAxisSpacing: 1,
-                                crossAxisCount: 3,
+                    child: GridView.builder(
+                        physics: const ScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisSpacing: 1,
+                          mainAxisSpacing: 1,
+                          crossAxisCount: 3,
+                        ),
+                        itemCount: posts.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            height: MediaQuery.of(context).size.height / 5,
+                            width: MediaQuery.of(context).size.width / 3.3,
+                            child: Card(
+                              child: Image.network(
+                                posts[index],
+                                fit: BoxFit.fill,
                               ),
-                              itemCount: posts.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                5,
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3.3,
-                                        child: Card(
-                                          child: Image.network(
-                                            posts[index],
-                                            fit: BoxFit.fill,
-                                          ),
-                                        ),
-                                      );
-                              }),
-                        )
+                            ),
+                          );
+                        }),
+                  )
                 ],
               ),
             ),
     );
   }
 }
-
-
-
 
 counts(String field, String number) {
   return Column(
